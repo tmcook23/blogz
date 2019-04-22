@@ -6,14 +6,26 @@
 <form action="/newpost" method="post">
     <label for="title">Title for your new blog:</label></td>
     <br>
-    <input name="title" type="text" value="{{ title }}">
+    <input type="text" id="title" name="title" value="{{ title }}" placeholder="Add a Title">
     <br>
     <br>
-    <label for="entry">Your new blog:</label></td>
+    <label for="body">Your new blog:</label></td>
     <br>
-    <textarea name="entry" rows="15" cols="100"></textarea>
+    <!-- <textarea id="body" name="body" value="{{ body }}" rows="15" cols="100" placeholder="Add an Entry."></textarea> -->
+    <input type=textarea id="body" name="body" value="{{ body }}" rows="15" cols="100" placeholder="Add an Entry."></textarea>
+    <!-- the above line returns the body, but the box is too small-->
     <br>
     <br>
     <input type="submit" value="Add Entry">
 </form>
+
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        <ul>
+        {% for category,message in messages %}
+            <li class="{{category}}">{{message}}</li>
+        {% endfor %}
+        </ul>
+    {% endwith %}
+
 {% endblock %}
