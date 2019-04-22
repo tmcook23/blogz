@@ -6,7 +6,7 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:buildablog@localhost:8889/build-a-blog' #mysql+pymysql://username:password@localhost:8889/database name'
 app.config['SQLALCHEMY_ECHO'] = True #echos SQL commands that are getting generated
 db = SQLAlchemy(app)
-app.secret_key = 'y337kGcys&zP3B'
+# drafting this for Blogz: app.secret_key = 'y337kGcys&zP3B'
 
 class Blog(db.Model): #db is the object we created above
 
@@ -47,12 +47,26 @@ def newpost():
         new_blog = Blog(title, body)
         db.session.add(new_blog)
         db.session.commit()
+        blog = new_blog.id
 
-        return redirect('/blog')
+        return redirect('/displaypost?id={0}'.format(blog))
+
 
     return render_template('newpost.html')
+
+@app.route('/displaypost', methods=['GET'])
+def view_post():
     
-    
+    blog_id = request.args.get('id')
+    blog = Blog.query.get(blog_id)
+
+    if blog_id:
+
+        title = blog.title
+        body = blog.body
+
+    return render_template('/displaypost.html', title=title, body=body)
+
 
 if __name__ == '__main__':
     app.run()
