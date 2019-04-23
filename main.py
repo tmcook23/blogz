@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:buildablog@localhost:8889/build-a-blog' #mysql+pymysql://username:password@localhost:8889/database name'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:bloggyblog@localhost:8889/blogz' #mysql+pymysql://username:password@localhost:8889/database name'
 app.config['SQLALCHEMY_ECHO'] = True #echos SQL commands that are getting generated
 db = SQLAlchemy(app)
 # drafting this for Blogz: app.secret_key = 'y337kGcys&zP3B'
