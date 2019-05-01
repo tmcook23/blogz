@@ -10,6 +10,7 @@
         {% for blog in blogs %}
         <a href = "/displaypost?id={{blog.id}}">{{blog.title}}</a>
         <p>{{blog.body}}</p>
+        <p>Written by:  <a href = "/displayuser?user={{blog.owner_id}}&username={{blog.owner.username}}">{{ blog.owner.username }}</a></p>
         {% endfor %}
 
     <br>
