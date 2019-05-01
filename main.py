@@ -83,15 +83,6 @@ def signup():
             return "<h1>Choose a new username.</h1>"
 
     return render_template('signup.html', title="Signup")
-
-
-@app.route('/', methods=['GET'])
-def index():
-
-    usernames = User.query.all()
-    return render_template('index.html', title="Home", usernames=usernames)
-
-    # IF I CLICK ON A USERNAME, REDIRECT TO PAGE WITH ALL OF THAT USER'S POSTS.
     
 
 @app.route('/blog', methods=['GET', 'POST'])
@@ -99,18 +90,6 @@ def blog():
 
         blogs = Blog.query.all()
         return render_template('blog.html', blogs=blogs)
-
-        blog_id = request.args.get("id")
-        user_id = request.args.get("user")
-
-        if blog_id:
-            blog = Blog.query.filter_by(id=blog_id).first()
-            return render_template('blog.html', blogs=blogs)
-        elif user_id:
-            user = Blog.query.filter_by(id=user_id).first()
-            blog_posts = Blog.query.all()
-            return render_template('/singleUser.html', title=title, body=body)
-
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
@@ -156,13 +135,6 @@ def view_post():
         body = blog.body
 
     return render_template('/displaypost.html', title=title, body=body)
-
-
-@app.route('/single_user', methods=['GET'])
-def single_user():
-    blog_id = request.args.get('id')
-    blog = Blog.query.filter_by(id=blog_id).first()
-    return render_template('/singleUser.html', blog=blog, title=title, body=body)
 
 
 @app.route('/logout')
