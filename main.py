@@ -37,6 +37,16 @@ def require_login():
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
+
+@app.route('/', methods=['GET'])
+def index():
+
+   usernames = User.query.all()
+   return render_template('index.html', title="Home", usernames=usernames)
+
+   # TODO - IF I CLICK ON A USERNAME, REDIRECT TO PAGE WITH ALL OF THAT USER'S POSTS.
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
