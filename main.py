@@ -44,8 +44,6 @@ def index():
    usernames = User.query.all()
    return render_template('index.html', title="Home", usernames=usernames)
 
-   # TODO - IF I CLICK ON A USERNAME, REDIRECT TO PAGE WITH ALL OF THAT USER'S POSTS.
-
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -150,8 +148,9 @@ def view_post():
 @app.route('/displayuser', methods=['GET'])
 def displayuser():
    user_id = request.args.get('user')
+   username = request.args.get('username')
    blogs = Blog.query.filter_by(owner_id=user_id)
-   return render_template('/displayuser.html', blogs=blogs, username=user_id)
+   return render_template('/displayuser.html', blogs=blogs, user=user_id, username=username)
 
 
 @app.route('/logout')
