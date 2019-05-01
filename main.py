@@ -142,7 +142,7 @@ def view_post():
         title = blog.title
         body = blog.body
 
-    return render_template('/displaypost.html', title=title, body=body)
+    return render_template('displaypost.html', title=title, body=body, blog=blog)
 
 
 @app.route('/displayuser', methods=['GET'])
