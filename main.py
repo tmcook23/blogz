@@ -98,8 +98,8 @@ def signup():
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
 
-        blogs = Blog.query.all()
-        return render_template('blog.html', blogs=blogs)
+    blogs = Blog.query.all()
+    return render_template('blog.html', blogs=blogs)
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
@@ -145,6 +145,13 @@ def view_post():
         body = blog.body
 
     return render_template('/displaypost.html', title=title, body=body)
+
+
+@app.route('/displayuser', methods=['GET'])
+def displayuser():
+   user_id = request.args.get('user')
+   blogs = Blog.query.filter_by(owner_id=user_id)
+   return render_template('/displayuser.html', blogs=blogs, username=user_id)
 
 
 @app.route('/logout')
