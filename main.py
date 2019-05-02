@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
+import cgi
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -78,17 +79,42 @@ def signup():
         verify = request.form['verify']
 
         # TODO - validate user's data
+        username_error = ''
+        password_error = ''
+        verify_error = ''
 
+        if username == '':
+            username_error = 'Enter a username.'
+            username = username
+        elif ' ' in username: # If username contains a space:
+            username_error = 'Usernames cannot contain spaces. Enter a valid username.'
+            username = username
+        elif len(username) < 3 or len(username) > 20:
+            username_error = 'Enter a valid username (3-20 characters).'
+            username = username
+    
+        if password == '':
+            password_error = 'Enter a password.'
+        elif ' ' in password: # If password contains a space:
+            password_error = 'Passwords cannot contain spaces. Enter a valid password.'
+        elif len(password) < 3 or len(password) > 20:
+            password_error = 'Enter a valid password (3-20 characters).'
+    
+        if verify != password:
+            verify_error = 'Does not match password.'
+            
         existing_user = User.query.filter_by(username=username).first()
-        if not existing_user:
+        if not existing_user and not username_error and not password_error and not verify_error:
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username
             return redirect('/newpost')
         else:
-            # TODO - user better response messaging
-            return "<h1>Choose a new username.</h1>"
+            return render_template('signup.html', username=username, username_error=username_error, password=password, password_error=password_error, verify=verify, verify_error=verify_error)
+
+            # TODO - user better response messaging (testing the above)
+            # return "<h1>Choose a new username.</h1>"
 
     return render_template('signup.html', title="Signup")
     
