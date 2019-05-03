@@ -2,12 +2,14 @@ from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import cgi
 
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:bloggyblog@localhost:8889/blogz' #mysql+pymysql://username:password@localhost:8889/database name'
 app.config['SQLALCHEMY_ECHO'] = True #echos SQL commands that are getting generated
 db = SQLAlchemy(app)
 app.secret_key = 'y337kGcys&_zP3B'
+
 
 class Blog(db.Model): #db is the object we created above
 
@@ -21,6 +23,7 @@ class Blog(db.Model): #db is the object we created above
         self.body = body
         self.owner = owner
 
+
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -31,6 +34,7 @@ class User(db.Model):
     def __init__(self, username, password):
         self.username = username
         self.password = password
+
 
 @app.before_request
 def require_login():
@@ -52,15 +56,15 @@ def login():
         username = request.form['username']
         password = request.form['password']
         owner = User.query.filter_by(username=username).first()
-        # if user enters existing username (stored in the database) with the correct password --> and is redirected to the /newpost page with their username being stored in a session.
+        # if user exists and password is correct --> redirect to /newpost page with username stored in a session.
         if owner and owner.password == password:
             session['username'] = username
             flash("Logged in")
             return redirect('/newpost')
-        # if user enters a username that is stored in the database with an incorrect password --> redirected to the /login page with a message that their password is incorrect.
+        # if user exists and password is incorrect --> redirect to /login page with message saying password is incorrect.
         elif owner and owner.password != password:
             flash('User password is incorrect.', 'error')
-        # if user tries to login with a username that is not stored in the database and is redirected to the /login page with a message that this username does not exist.
+        # if user does not exist --> redirect to the /login page with message saying username does not exist.
         elif not owner:
             flash('User does not exist', 'error')
             return render_template('login.html')
@@ -100,7 +104,7 @@ def signup():
         elif len(password) < 3 or len(password) > 20:
             password_error = 'Enter a valid password (3-20 characters).'
     
-        if verify != password:
+        if verify != password: # If verify does not match password:
             verify_error = 'Does not match password.'
             
         existing_user = User.query.filter_by(username=username).first()
@@ -112,9 +116,6 @@ def signup():
             return redirect('/newpost')
         else:
             return render_template('signup.html', username=username, username_error=username_error, password=password, password_error=password_error, verify=verify, verify_error=verify_error)
-
-            # TODO - user better response messaging (testing the above)
-            # return "<h1>Choose a new username.</h1>"
 
     return render_template('signup.html', title="Signup")
     
@@ -142,7 +143,7 @@ def newpost():
             else:
                 flash("Please fill in the title.", "error")
                 return render_template('newpost.html', title=title, body=body)
-        else:    # NEED TO GET THE BODY ENTRY TO REMAIN
+        else:
             if body == "":
                 flash("Please fill in the body.", "error")
                 return render_template('newpost.html', title=title, body=body)
@@ -156,6 +157,7 @@ def newpost():
 
 
     return render_template('newpost.html')
+
 
 @app.route('/displaypost', methods=['GET'])
 def view_post():
@@ -183,6 +185,7 @@ def displayuser():
 def logout():
     del session['username']
     return redirect('/blog')
+
 
 if __name__ == '__main__':
     app.run()
