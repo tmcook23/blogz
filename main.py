@@ -82,7 +82,7 @@ def signup():
         password = request.form['password']
         verify = request.form['verify']
 
-        # TODO - validate user's data
+        # Validates user-submitted data:
         username_error = ''
         password_error = ''
         verify_error = ''
